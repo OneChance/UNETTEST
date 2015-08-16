@@ -74,8 +74,6 @@ public class PlayerSyncPos : NetworkBehaviour
             else {
                 lerpRate = normalLerpRate;
             }
-
-            Debug.Log(posList.Count);
         }
     }
 
