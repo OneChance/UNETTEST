@@ -5,7 +5,7 @@ using UnityEngine.Networking;
 public class PlayerShoot : NetworkBehaviour
 {
 
-	private float damage = 25;
+	private int damage = -25;
 	private float range = 200;
 	[SerializeField]
 	private Transform camTransform;
@@ -20,7 +20,9 @@ public class PlayerShoot : NetworkBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
-	
+		if(Input.GetKeyDown(KeyCode.Mouse0)){
+			CheckIfShooting();
+		}
 	}
 
 	void CheckIfShooting ()
@@ -36,15 +38,16 @@ public class PlayerShoot : NetworkBehaviour
 	{
 		if (Physics.Raycast (camTransform.TransformPoint (0, 0, 0.5f), camTransform.forward, out hit, range)) {
 			if (hit.transform.tag == "Player") {
-				string identity = transform.name;
-				cmdTellServerWhoWasShot (identity, damage);
+				string identity = hit.transform.name;
+				CmdTellServerWhoWasShot (identity, damage);
 			}
 		}
 	}
 
 	[Command]
-	void cmdTellServerWhoWasShot (string identity, float damage)
+	void CmdTellServerWhoWasShot (string identity, int damage)
 	{
 		GameObject go = GameObject.Find(identity);
+		go.GetComponent<PlayerHealth>().ChangeHealth(damage);
 	}
 }

@@ -8,7 +8,7 @@ public class PlayerId : NetworkBehaviour
 	[SyncVar]
 	private string
 		identity;
-	private NetworkInstanceId netId;
+	private NetworkInstanceId pNetId;
 	private Transform myTransform;
 
 	public override void OnStartClient ()
@@ -43,13 +43,13 @@ public class PlayerId : NetworkBehaviour
 	[Client]
 	void GetNetIdentity ()
 	{
-		netId = GetComponent<NetworkIdentity> ().netId;
+		pNetId = GetComponent<NetworkIdentity> ().netId;
 		CmdTellServerMyIdentity (MakeIdentity ());
 	}
 
 	string MakeIdentity ()
 	{
-		return "Player" + netId.ToString ();	
+		return "Player" + pNetId.ToString ();	
 	}
 
 	[Command]
