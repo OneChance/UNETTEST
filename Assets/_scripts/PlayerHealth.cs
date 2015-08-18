@@ -10,6 +10,14 @@ public class PlayerHealth : NetworkBehaviour
 	private int
 		health = 100;
 	private Text healthText;
+    private bool shoudDie = false;
+    public bool dead = false;
+
+    public delegate void DieDelegate();
+    public event DieDelegate dieEvent;
+
+    public delegate void RespawnDelegate();
+    public event RespawnDelegate respawnEvent;
 
 	// Use this for initialization
 	void Start ()
@@ -21,8 +29,28 @@ public class PlayerHealth : NetworkBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
-	
+        CheckCondition();
 	}
+
+    void CheckCondition() {
+        if (health <= 0 && !shoudDie && !dead) {
+            shoudDie = true;
+        }
+
+        if (health <= 0 && shoudDie) {
+            if (dieEvent != null) {
+                dieEvent();
+            }
+            shoudDie = false;
+        }
+
+        if (health > 0 && dead) {
+            if (respawnEvent != null) {
+                respawnEvent();
+                dead = false;
+            }
+        }
+    }
 
 	void SetHealthText ()
 	{	
@@ -42,4 +70,7 @@ public class PlayerHealth : NetworkBehaviour
 		SetHealthText ();
 	}
 
+    public void ResetHealth() {
+        health = 100;
+    }
 }
