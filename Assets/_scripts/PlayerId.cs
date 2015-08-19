@@ -26,8 +26,9 @@ public class PlayerId : NetworkBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
+		//如果客户端已经启动，之后又新的客户端连接，在这里设置ID
 		if (myTransform.name == "" || myTransform.name == "Player(Clone)") {
-			//SetIdentity();
+			SetIdentity ();
 		}
 	}
 

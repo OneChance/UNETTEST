@@ -40,6 +40,7 @@ public class PlayerDeath : NetworkBehaviour {
         if (isLocalPlayer) {
             GetComponent<UnityStandardAssets.Characters.FirstPerson.FirstPersonController>().enabled = false;
             aim.enabled = false;
+			GameObject.Find ("GameManager").GetComponent<GlobalReference> ().respawnButton.SetActive(true);
         }
     }
 }

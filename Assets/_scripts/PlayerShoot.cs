@@ -8,7 +8,8 @@ public class PlayerShoot : NetworkBehaviour
 	private int damage = -25;
 	private float range = 200;
 	[SerializeField]
-	private Transform camTransform;
+	private Transform
+		camTransform;
 	private RaycastHit hit;
 
 	// Use this for initialization
@@ -20,8 +21,8 @@ public class PlayerShoot : NetworkBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
-		if(Input.GetKeyDown(KeyCode.Mouse0)){
-			CheckIfShooting();
+		if (Input.GetKeyDown (KeyCode.Mouse0)) {
+			CheckIfShooting ();
 		}
 	}
 
@@ -40,6 +41,9 @@ public class PlayerShoot : NetworkBehaviour
 			if (hit.transform.tag == "Player") {
 				string identity = hit.transform.name;
 				CmdTellServerWhoWasShot (identity, damage);
+			} else if (hit.transform.tag == "Zombie") {
+				string identity = hit.transform.name;
+				CmdTellServerZombieWasShot (identity, damage);
 			}
 		}
 	}
@@ -47,7 +51,14 @@ public class PlayerShoot : NetworkBehaviour
 	[Command]
 	void CmdTellServerWhoWasShot (string identity, int damage)
 	{
-		GameObject go = GameObject.Find(identity);
-		go.GetComponent<PlayerHealth>().ChangeHealth(damage);
+		GameObject go = GameObject.Find (identity);
+		go.GetComponent<PlayerHealth> ().ChangeHealth (damage);
+	}
+
+	[Command]
+	void CmdTellServerZombieWasShot (string identity, int damage)
+	{
+		GameObject go = GameObject.Find (identity);
+		go.GetComponent<ZombieHealth> ().DeductHealth (damage);
 	}
 }
