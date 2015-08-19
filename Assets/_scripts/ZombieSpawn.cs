@@ -7,22 +7,41 @@ public class ZombieSpawn : NetworkBehaviour
 
 	[SerializeField]
 	GameObject zombiePrefab;
-	[SerializeField]
-	GameObject zombieSpawn;
+	private GameObject[] zombieSpawns;
 	private int counter;
-	private int numberOfZombies = 30;
+	private int numberOfZombies = 10;
+	private int maxNumberOfZombies = 30;
+	private float waveRate = 10;
+	private bool isSpawnActived = true;
 
 	//这个方法只会在服务器端运行
 	public override void OnStartServer ()
 	{
-		for (int i=0; i<numberOfZombies; i++) {
-			SpawnZombies ();
+		zombieSpawns = GameObject.FindGameObjectsWithTag("ZombieSpawn");
+		StartCoroutine (ZombieSpawner ());
+	}
+
+	IEnumerator ZombieSpawner(){
+		for (;;) {
+			yield return new WaitForSeconds(waveRate);
+			GameObject[] zombies = GameObject.FindGameObjectsWithTag("Zombie");
+			if(zombies.Length<maxNumberOfZombies){
+				CommenceSpawn();
+			}
 		}
 	}
 
-	void SpawnZombies ()
+	void CommenceSpawn(){
+		if (isSpawnActived) {
+			for(int i=0;i<numberOfZombies;i++){
+				SpawnZombies(zombieSpawns[Random.Range(0,zombieSpawns.Length)].transform.position);
+			}
+		}
+	}
+
+	void SpawnZombies (Vector3 spawnPos)
 	{
-		GameObject go = GameObject.Instantiate (zombiePrefab, zombieSpawn.transform.position, Quaternion.identity) as GameObject;
+		GameObject go = GameObject.Instantiate (zombiePrefab, spawnPos, Quaternion.identity) as GameObject;
 		NetworkServer.Spawn (go);
 		counter++;
 		go.GetComponent<ZombieId> ().zombieId = "Zombie" + counter;
