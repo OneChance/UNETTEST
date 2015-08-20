@@ -42,9 +42,9 @@ public class ZombieSpawn : NetworkBehaviour
 	void SpawnZombies (Vector3 spawnPos)
 	{
 		GameObject go = GameObject.Instantiate (zombiePrefab, spawnPos, Quaternion.identity) as GameObject;
-		NetworkServer.Spawn (go);
 		counter++;
 		go.GetComponent<ZombieId> ().zombieId = "Zombie" + counter;
+		NetworkServer.Spawn (go);
 	}
 
 	// Use this for initialization

@@ -10,16 +10,17 @@ public class PlayerRespawn : NetworkBehaviour
 	private Image aim;
 	private GameObject respawnButton;
 
-	// Use this for initialization
-	void Start ()
-	{
-		aim = GameObject.Find ("Aim").GetComponent<Image> ();
+	public override void PreStartClient(){
 		healthScript = GetComponent<PlayerHealth> ();
 		healthScript.respawnEvent += EnablePlayer;
+	}
+	
+	public override void OnStartLocalPlayer(){
+		aim = GameObject.Find ("Aim").GetComponent<Image> ();		
 		SetRespawnButton ();
 	}
 
-	void OnDisable() {
+	public override void OnNetworkDestroy() {
 		healthScript.respawnEvent -= EnablePlayer;
 	}
 
